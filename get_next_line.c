@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ncheniou <ncheniou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/15 18:19:36 by ncheniou          #+#    #+#             */
+/*   Updated: 2025/02/15 18:19:37 by ncheniou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 
@@ -9,9 +21,13 @@ static char	*in_buffer(int fd, char *buffer)
 	bytes_read = 1;
 	if (!buffer)
 		buffer = NULL;
-	buff = malloc(BUFFER_SIZE + 1);
+	buff = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buff)
-        return (NULL);
+	{
+		if (buffer)
+        	return (free(buffer), NULL);
+		return (NULL);
+	}
 	while (bytes_read > 0)
 	{
 		bytes_read = read(fd, buff, BUFFER_SIZE);
@@ -84,6 +100,8 @@ char	*get_next_line(int fd)
 	if (!rcvr)
 		return (NULL);
 	line = procc_line(rcvr);
+	if (!line)
+		return (free(rcvr), rcvr = NULL);
 	rcvr = sep_line(rcvr);
 	if (line && *line == '\0' )
 	{
@@ -115,41 +133,4 @@ char	*get_next_line(int fd)
 // 	printf("BUFFER_SIZE = %d\n", BUFFER_SIZE);
 // 	close(fd);
 // 	return (0);
-// }
-
-
-// static char *ft_free(char *buffer, char *buff)
-// {
-// 	char *aux;
-
-// 	aux = ft_strjoin(buffer, buff);
-// 	free(buffer);
-// 	return(aux);
-// }
-
-// static char	*in_buffer(int fd, char *buffer)
-// {
-// 	char	*buff;
-// 	int		bytes_read;
-	
-// 	bytes_read = 1;
-// 	if (!buffer)
-// 		buffer = malloc(sizeof(char) * 1);
-// 	buff = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-// 	while (bytes_read > 0)
-// 	{
-// 		bytes_read = read(fd, buff, BUFFER_SIZE);
-// 		if (bytes_read == -1)
-// 		{
-// 			free(buff);
-// 			return (NULL);
-// 		}
-// 		buff[bytes_read] = '\0';
-// 		printf("buff::%s\n", buff);
-// 		buffer = ft_free(buffer, buff);
-// 		if (ft_strchr(buffer, '\n') )
-// 			break;
-// 	}
-// 	free(buff);
-// 	return (buffer);
 // }
