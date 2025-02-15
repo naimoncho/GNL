@@ -1,32 +1,29 @@
 #include "get_next_line.h"
 
-static void	ft_free_all(char *to_free)
-{
-	if (to_free == NULL)
-		return ;
-	free(to_free);
-	to_free = NULL;
-}
 
 static char	*in_buffer(int fd, char *buffer)
 {
 	char	*buff;
 	int		bytes_read;
 	
+	bytes_read = 1;
 	if (!buffer)
-		buffer = ft_calloc(sizeof(char), 1);
-	buff = ft_calloc(sizeof(char), (BUFFER_SIZE + 1));
-	while (!ft_strchr(buff, '\n') && bytes_read != 0)
+		buffer = NULL;
+	buff = malloc(BUFFER_SIZE + 1);
+	if (!buff)
+        return (NULL);
+	while (bytes_read > 0)
 	{
-		buff = read(fd, buff, BUFFER_SIZE);
-		if (read == -1)
+		bytes_read = read(fd, buff, BUFFER_SIZE);
+		if (bytes_read == -1)
 		{
 			free(buff);
-			free(buffer);
 			return (NULL);
 		}
 		buff[bytes_read] = '\0';
-		buff = ft_strjoin(buffer, buff);
+		buffer = ft_strjoin(buffer, buff);
+		if (ft_strchr(buff, '\n'))
+			break;			
 	}
 	free(buff);
 	return (buffer);
@@ -37,10 +34,13 @@ static char	*procc_line(char *buffer)
 	int		i;
 	char	*line;
 
-	if(buffer[0])
+	i = 0;
+	if(!buffer)
 		return (NULL);
-	while (buffer[i] != '\0' && buffer[i] != '\n')
-		i ++;
+	while (buffer[i] && buffer[i] != '\n')
+	{
+		i++;
+	}
 	line = ft_substr(buffer, 0, i + 1);
 	return (line);
 }
@@ -50,13 +50,23 @@ static char	*sep_line(char *buffer)
 	int		i;
 	char	*aux;
 
-	if(buffer[0])
+	i = 0;
+	if(!buffer)
+	{
+		free(buffer);
+		buffer = NULL;
 		return (NULL);
-	while (buffer[i] != '\0' && buffer[i] != '\n')
+	}
+	while (buffer[i] != '\n' && buffer[i] != '\0')
 		i ++;
-	aux = ft_substr(buffer, i + 1, ft_strlen(buffer) - 1);
+	aux = ft_substr(buffer, i + 1, ft_strlen(buffer) - i);
+	if (!aux)
+	{
+		free(buffer);
+		return (NULL);
+	}
 	free(buffer);
-	buffer = aux;
+	return (aux);
 }
 
 char	*get_next_line(int fd)
@@ -65,16 +75,81 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
-		ft_free_all(rcvr);
+	{
+		free(rcvr);
+		rcvr = NULL;
+		return (NULL);
+	}
 	rcvr = in_buffer(fd, rcvr);
+	if (!rcvr)
+		return (NULL);
 	line = procc_line(rcvr);
-	sep_line(&rcvr);
+	rcvr = sep_line(rcvr);
 	if (line && *line == '\0' )
 	{
 		free(line);
 		free(rcvr);
-		line = NULL;
 		rcvr = NULL;
+		return (NULL);
 	}
 	return (line);
 }
+
+// int	main(void)
+// {
+// 	int		fd;
+// 	char	*str;
+// 	int		i;
+
+// 	i = 0;
+// 	fd = open("prueba.txt", O_RDONLY);
+// 	while ((i <= 6))
+// 	{
+// 		str = get_next_line(fd);
+// 		printf("line %i => [%s]\n", i + 1, str);
+// 		if (!str)
+// 			break;
+// 		free(str);
+// 		i++;
+// 	}
+// 	printf("BUFFER_SIZE = %d\n", BUFFER_SIZE);
+// 	close(fd);
+// 	return (0);
+// }
+
+
+// static char *ft_free(char *buffer, char *buff)
+// {
+// 	char *aux;
+
+// 	aux = ft_strjoin(buffer, buff);
+// 	free(buffer);
+// 	return(aux);
+// }
+
+// static char	*in_buffer(int fd, char *buffer)
+// {
+// 	char	*buff;
+// 	int		bytes_read;
+	
+// 	bytes_read = 1;
+// 	if (!buffer)
+// 		buffer = malloc(sizeof(char) * 1);
+// 	buff = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+// 	while (bytes_read > 0)
+// 	{
+// 		bytes_read = read(fd, buff, BUFFER_SIZE);
+// 		if (bytes_read == -1)
+// 		{
+// 			free(buff);
+// 			return (NULL);
+// 		}
+// 		buff[bytes_read] = '\0';
+// 		printf("buff::%s\n", buff);
+// 		buffer = ft_free(buffer, buff);
+// 		if (ft_strchr(buffer, '\n') )
+// 			break;
+// 	}
+// 	free(buff);
+// 	return (buffer);
+// }
