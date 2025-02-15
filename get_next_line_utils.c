@@ -6,7 +6,7 @@
 /*   By: ncheniou <ncheniou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 18:19:09 by ncheniou          #+#    #+#             */
-/*   Updated: 2025/02/15 18:19:14 by ncheniou         ###   ########.fr       */
+/*   Updated: 2025/02/15 18:29:13 by ncheniou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ int	ft_strlen(char *str)
 	int	aux;
 
 	aux = 0;
-	if(!str)
-		return(0);
+	if (!str)
+		return (0);
 	while (str[aux])
 		aux ++;
 	return (aux);
@@ -41,7 +41,6 @@ char	*ft_strchr(const char *s, int c)
 		return ((char *)&s[i]);
 	return (NULL);
 }
-
 
 char	*ft_substr(char *s, unsigned int start, size_t len)
 {

@@ -6,18 +6,17 @@
 /*   By: ncheniou <ncheniou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 18:19:36 by ncheniou          #+#    #+#             */
-/*   Updated: 2025/02/15 18:19:37 by ncheniou         ###   ########.fr       */
+/*   Updated: 2025/02/15 18:28:45 by ncheniou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-
 static char	*in_buffer(int fd, char *buffer)
 {
 	char	*buff;
 	int		bytes_read;
-	
+
 	bytes_read = 1;
 	if (!buffer)
 		buffer = NULL;
@@ -25,21 +24,18 @@ static char	*in_buffer(int fd, char *buffer)
 	if (!buff)
 	{
 		if (buffer)
-        	return (free(buffer), NULL);
+			return (free(buffer), NULL);
 		return (NULL);
 	}
 	while (bytes_read > 0)
 	{
 		bytes_read = read(fd, buff, BUFFER_SIZE);
 		if (bytes_read == -1)
-		{
-			free(buff);
-			return (NULL);
-		}
+			return (free(buff), NULL);
 		buff[bytes_read] = '\0';
 		buffer = ft_strjoin(buffer, buff);
 		if (ft_strchr(buff, '\n'))
-			break;			
+			break ;
 	}
 	free(buff);
 	return (buffer);
@@ -51,7 +47,7 @@ static char	*procc_line(char *buffer)
 	char	*line;
 
 	i = 0;
-	if(!buffer)
+	if (!buffer)
 		return (NULL);
 	while (buffer[i] && buffer[i] != '\n')
 	{
@@ -67,7 +63,7 @@ static char	*sep_line(char *buffer)
 	char	*aux;
 
 	i = 0;
-	if(!buffer)
+	if (!buffer)
 	{
 		free(buffer);
 		buffer = NULL;
