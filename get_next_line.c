@@ -6,7 +6,7 @@
 /*   By: ncheniou <ncheniou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 18:19:36 by ncheniou          #+#    #+#             */
-/*   Updated: 2025/02/19 13:09:53 by ncheniou         ###   ########.fr       */
+/*   Updated: 2025/02/19 13:11:56 by ncheniou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,24 +103,24 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-int	main(void)
-{
-	int		fd;
-	char	*str;
-	int		i;
+// int	main(void)
+// {
+// 	int		fd;
+// 	char	*str;
+// 	int		i;
 
-	i = 0;
-	fd = open("prueba.txt", O_RDONLY);
-	while ((i <= 14))
-	{
-		str = get_next_line(fd);
-		printf("line %i => [%s]\n", i + 1, str);
-		if (!str)
-			break;
-		free(str);
-		i++;
-	}
-	printf("BUFFER_SIZE = %d\n", BUFFER_SIZE);
-	close(fd);
-	return (0);
-}
+// 	i = 0;
+// 	fd = open("prueba.txt", O_RDONLY);
+// 	while ((i <= 14))
+// 	{
+// 		str = get_next_line(fd);
+// 		printf("line %i => [%s]\n", i + 1, str);
+// 		if (!str)
+// 			break;
+// 		free(str);
+// 		i++;
+// 	}
+// 	printf("BUFFER_SIZE = %d\n", BUFFER_SIZE);
+// 	close(fd);
+// 	return (0);
+// }
