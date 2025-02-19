@@ -6,7 +6,7 @@
 /*   By: ncheniou <ncheniou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 18:19:36 by ncheniou          #+#    #+#             */
-/*   Updated: 2025/02/15 18:28:45 by ncheniou         ###   ########.fr       */
+/*   Updated: 2025/02/19 13:09:53 by ncheniou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static char	*in_buffer(int fd, char *buffer)
 	{
 		bytes_read = read(fd, buff, BUFFER_SIZE);
 		if (bytes_read == -1)
-			return (free(buff), NULL);
+			return (free(buff), free(buffer), NULL);
 		buff[bytes_read] = '\0';
 		buffer = ft_strjoin(buffer, buff);
 		if (ft_strchr(buff, '\n'))
@@ -86,12 +86,6 @@ char	*get_next_line(int fd)
 	static char	*rcvr;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
-	{
-		free(rcvr);
-		rcvr = NULL;
-		return (NULL);
-	}
 	rcvr = in_buffer(fd, rcvr);
 	if (!rcvr)
 		return (NULL);
@@ -109,24 +103,24 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-// int	main(void)
-// {
-// 	int		fd;
-// 	char	*str;
-// 	int		i;
+int	main(void)
+{
+	int		fd;
+	char	*str;
+	int		i;
 
-// 	i = 0;
-// 	fd = open("prueba.txt", O_RDONLY);
-// 	while ((i <= 6))
-// 	{
-// 		str = get_next_line(fd);
-// 		printf("line %i => [%s]\n", i + 1, str);
-// 		if (!str)
-// 			break;
-// 		free(str);
-// 		i++;
-// 	}
-// 	printf("BUFFER_SIZE = %d\n", BUFFER_SIZE);
-// 	close(fd);
-// 	return (0);
-// }
+	i = 0;
+	fd = open("prueba.txt", O_RDONLY);
+	while ((i <= 14))
+	{
+		str = get_next_line(fd);
+		printf("line %i => [%s]\n", i + 1, str);
+		if (!str)
+			break;
+		free(str);
+		i++;
+	}
+	printf("BUFFER_SIZE = %d\n", BUFFER_SIZE);
+	close(fd);
+	return (0);
+}
